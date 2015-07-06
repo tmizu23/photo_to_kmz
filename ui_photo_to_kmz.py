@@ -56,12 +56,12 @@ class Ui_photo_to_kmz(object):
 
     def retranslateUi(self, photo_to_kmz):
         photo_to_kmz.setWindowTitle(_translate("photo_to_kmz", "photo_to_kmz", None))
-        self.label.setText(_translate("photo_to_kmz", "ตั้งชื่อไฟล์ผลลัพธ์ \n"
-" ไม่ต้องใส่ .kmz", None))
+        self.label.setText(_translate("photo_to_kmz", "Save File Name \n"
+" not include .kmz", None))
         self.textPath.setHtml(_translate("photo_to_kmz", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p></body></html>", None))
-        self.browseButton.setText(_translate("photo_to_kmz", "เลือกแฟ้มภาพ", None))
+        self.browseButton.setText(_translate("photo_to_kmz", "Select Folder", None))
 
