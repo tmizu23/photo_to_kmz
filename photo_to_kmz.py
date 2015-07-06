@@ -214,7 +214,7 @@ class photo_to_kmz:
             os.rename(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.zip',str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.kmz')
             shutil.rmtree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz') 
             os.remove(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")            
-            QMessageBox.information( self.iface.mainWindow(),"Info", "Total export "+str(shp_id)+ " Points" )
+            QMessageBox.information( self.iface.mainWindow(),"Info", "Total export "+str(shp_id)+ " Points" +' || ' +"output folder: "+str(self.dlg.textPath.toPlainText().encode('iso-8859-11')) )
                             
             #pass
 
