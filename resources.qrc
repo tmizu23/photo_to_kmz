@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/photo_to_kmz" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
