@@ -2,11 +2,14 @@
 <ui version="4.0">
  <class>photo_to_kmz</class>
  <widget class="QDialog" name="photo_to_kmz">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
+    <width>538</width>
     <height>157</height>
    </rect>
   </property>
@@ -16,7 +19,7 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>80</x>
      <y>120</y>
      <width>341</width>
      <height>32</height>
@@ -32,7 +35,7 @@
   <widget class="QTextEdit" name="textEdit">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>150</x>
      <y>70</y>
      <width>271</width>
      <height>31</height>
@@ -44,7 +47,7 @@
     <rect>
      <x>20</x>
      <y>70</y>
-     <width>101</width>
+     <width>121</width>
      <height>31</height>
     </rect>
    </property>
@@ -54,14 +57,14 @@
     </font>
    </property>
    <property name="text">
-    <string>ตั้งชื่อไฟล์ผลลัพธ์ 
- ไม่ต้องใส่ .kmz</string>
+    <string>Save as File Name 
+ not include .kmz</string>
    </property>
   </widget>
   <widget class="QTextBrowser" name="textPath">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>40</x>
      <y>20</y>
      <width>381</width>
      <height>31</height>
@@ -78,14 +81,14 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="browseButton">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>440</x>
      <y>20</y>
      <width>75</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>เลือกแฟ้มภาพ</string>
+    <string>Select Folder</string>
    </property>
   </widget>
  </widget>
