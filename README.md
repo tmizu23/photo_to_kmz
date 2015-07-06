@@ -6,7 +6,7 @@ Your plugin <b>photo_to_kmz</b> was created in:<br>
 &nbsp;&nbsp;<b>E:\dai_plugin\photo_to_kmz</b>
 <p>
 Your QGIS plugin directory is located at:<br>
-&nbsp;&nbsp;<b>C:/Users/surachai02/.qgis2/python/plugins</b>
+&nbsp;&nbsp;<b>C:/Users/yourname/.qgis2/python/plugins</b>
 <p>
 <b>What's Next</b>
 <ol>
