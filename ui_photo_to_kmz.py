@@ -26,17 +26,19 @@ except AttributeError:
 class Ui_photo_to_kmz(object):
     def setupUi(self, photo_to_kmz):
         photo_to_kmz.setObjectName(_fromUtf8("photo_to_kmz"))
-        photo_to_kmz.resize(490, 157)
+        photo_to_kmz.resize(538, 157)
+	photo_to_kmz.setFixedSize(538, 157)	
+
         self.buttonBox = QtGui.QDialogButtonBox(photo_to_kmz)
         self.buttonBox.setGeometry(QtCore.QRect(60, 120, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
         self.textEdit = QtGui.QTextEdit(photo_to_kmz)
-        self.textEdit.setGeometry(QtCore.QRect(130, 70, 271, 31))
+        self.textEdit.setGeometry(QtCore.QRect(190, 70, 211, 31))
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         self.label = QtGui.QLabel(photo_to_kmz)
-        self.label.setGeometry(QtCore.QRect(20, 70, 101, 31))
+        self.label.setGeometry(QtCore.QRect(20, 70, 160, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label.setFont(font)
@@ -45,7 +47,7 @@ class Ui_photo_to_kmz(object):
         self.textPath.setGeometry(QtCore.QRect(20, 20, 381, 31))
         self.textPath.setObjectName(_fromUtf8("textPath"))
         self.browseButton = QtGui.QPushButton(photo_to_kmz)
-        self.browseButton.setGeometry(QtCore.QRect(410, 20, 75, 31))
+        self.browseButton.setGeometry(QtCore.QRect(410, 20, 100, 31))
         self.browseButton.setObjectName(_fromUtf8("browseButton"))
 
         self.retranslateUi(photo_to_kmz)
@@ -56,7 +58,7 @@ class Ui_photo_to_kmz(object):
 
     def retranslateUi(self, photo_to_kmz):
         photo_to_kmz.setWindowTitle(_translate("photo_to_kmz", "photo_to_kmz", None))
-        self.label.setText(_translate("photo_to_kmz", "Save File Name \n"
+        self.label.setText(_translate("photo_to_kmz", "Save File Name (Eng only)\n"
 " not include .kmz", None))
         self.textPath.setHtml(_translate("photo_to_kmz", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
