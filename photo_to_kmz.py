@@ -202,7 +202,7 @@ class photo_to_kmz:
                                 if lat:
                                     x, y = lat, lon
                                     
-                                    the_kml.write('<Style id="stylesel_'+str(shp_id)+'">' + arrow_style + '<BalloonStyle><text>&lt;p&gt;&lt;b&gt;Latitude:&lt;/b&gt; '+str(lat)+' &lt;b&gt;Longitude:&lt;/b&gt; '+str(lon)+' &lt;br&gt;&lt;/br&gt;&lt;b&gt;Date:&lt;/b&gt; '+str(dt1) +' &lt;b&gt;Time:&lt;/b&gt; '+str(dt2)+' &lt;b&gt;Degree:&lt;/b&gt; '+str(Yaw)+'&lt;/p&gt; &lt;table width=400 cellpadding=0 cellspacing=0"&gt;  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;img width=80%" src="files/'+str(filename.lower())+'"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div align="left"&gt;&lt;font color="green"&gt;&lt;b&gt;Created by GIS-HAII&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;</text><displayMode>default</displayMode></BalloonStyle></Style>'+'\n')
+                                    the_kml.write('<Style id="stylesel_'+str(shp_id)+'">' + arrow_style + '<BalloonStyle><text>&lt;p&gt;&lt;b&gt;Latitude:&lt;/b&gt; '+str(lat)+' &lt;b&gt;Longitude:&lt;/b&gt; '+str(lon)+' &lt;br&gt;&lt;/br&gt;&lt;b&gt;Date:&lt;/b&gt; '+str(dt1) +' &lt;b&gt;Time:&lt;/b&gt; '+str(dt2)+' &lt;b&gt;Degree:&lt;/b&gt; '+str(Yaw)+'&lt;/p&gt; &lt;table width=400 cellpadding=0 cellspacing=0"&gt;  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;img width=80%" src="'+str(filename.lower())+'"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div align="left"&gt;&lt;font color="green"&gt;&lt;b&gt;Created by GIS-HAII&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;</text><displayMode>default</displayMode></BalloonStyle></Style>'+'\n')
                                     aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point></Placemark>'+'\n'
                                     #point = kml.newpoint(name = filename , coords = [(y,x)])
                                     #picpath = kml.addfile(fullpath)
@@ -229,17 +229,17 @@ class photo_to_kmz:
             #if not os.path.exists(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz'):
                 #os.makedirs(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz')
             #copy prepare kmz
-            shutil.copytree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11')), str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz/files')
-            shutil.copy(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")
+            #shutil.copytree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11')), str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz/files')
+            #shutil.copy(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")
 
             #create zip
-            shutil.make_archive(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11')), "zip", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/')
-            os.rename(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.zip',str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.kmz')
-            shutil.rmtree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz') 
-            os.remove(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")            
+            #shutil.make_archive(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11')), "zip", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/')
+            #os.rename(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.zip',str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.kmz')
+            #shutil.rmtree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz') 
+            #os.remove(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")            
             QMessageBox.information( self.iface.mainWindow(),"Info", "Total export "+str(shp_id)+ " Points" +' || ' +"output folder: "+str(self.dlg.textPath.toPlainText().encode('iso-8859-11')) )
-            if shp_id > 0 :
-                os.startfile(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kmz")               
+            #if shp_id > 0 :
+            #    os.startfile(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kmz")               
             #pass
 
     def validate_entries(self):
