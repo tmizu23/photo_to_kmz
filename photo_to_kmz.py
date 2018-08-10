@@ -34,12 +34,21 @@ import shutil, errno
 
 from PIL import Image
 from PIL.ExifTags import TAGS
+from PIL.ExifTags import GPSTAGS
 import os,sys,zipfile
 
 
-head_kmz='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2"><Document id="feat_1">'
+head_kmz='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2"><Document id="feat_1"><Schema name="GPSHeading" id="GPSHeadingId"><SimpleField type="double" name="Heading"><displayName><![CDATA[heading]]></displayName></SimpleField></Schema>'
 
 
+
+def get_gps_direction(data):
+    try:
+        GPSImgDirection = data[17]
+        direction = (GPSImgDirection[0] / GPSImgDirection[1])
+        return direction
+    except:
+        return None
 
 def get_drone_exif(fn):
     try:
@@ -149,7 +158,7 @@ class photo_to_kmz:
         aaa=''
         if result == 1:
             new_file = open(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".csv","w")
-            new_file.write("name"+","+"lat"+","+"lng"+","+"degree"+"\n")
+            new_file.write("name"+","+"lat"+","+"lng"+","+"direction"+"\n")
 
             
             #write the_kml
@@ -168,56 +177,66 @@ class photo_to_kmz:
                     ext = filename.lower().rsplit('.', 1)[-1]
                     if ext in extens:
                         fullpath = os.path.join(dirpath, filename)
-			kmlimagepath = os.path.join(dirpath.replace(path,"."),filename.lower()).replace("\\","/")
-			QgsMessageLog.logMessage('My message', kmlimagepath)
+                        kmlimagepath = os.path.join(dirpath.replace(path,"."),filename.lower()).replace("\\","/")
+                        #QgsMessageLog.logMessage('My message', kmlimagepath)
                         a=get_exif(fullpath)
-			
-                        ####
-			Yaw=get_drone_exif(fullpath)
-			if Yaw is None:
-			   arrow_style = ''
-			else:
-			   arrow_style = '<IconStyle><Icon><href>http://www.ecoris.co.jp/images/contents_img/arrow.png</href></Icon><heading>' + str(Yaw) + '</heading></IconStyle>'
-                        ####
-                        if 'GPSInfo' in a:
-                            if a is not None and a['GPSInfo'] !={}: 
-                                lat = [float(x)/float(y) for x, y in a['GPSInfo'][2]]
-                                latref = a['GPSInfo'][1]
-                                lon = [float(x)/float(y) for x, y in a['GPSInfo'][4]]
-                                lonref = a['GPSInfo'][3]
-
-                                lat = lat[0] + lat[1]/60 + lat[2]/3600
-                                lon = lon[0] + lon[1]/60 + lon[2]/3600
-
-                                if latref == 'S':
-                                    lat = -lat
-                                if lonref == 'W':
-                                    lon = -lon
-
-                                dt1,dt2=a['DateTime'].split()
-                                if dt1 is None:
-                                    dt1='Unknow'
-                                if dt2 is None:
-                                    dt2='Unknow'                            
-                                
-                                if lat:
-                                    x, y = lat, lon
-                                    
-                                    the_kml.write('<Style id="stylesel_'+str(shp_id)+'">' + arrow_style + '<BalloonStyle><text>&lt;p&gt;&lt;b&gt;Latitude:&lt;/b&gt; '+str(lat)+' &lt;b&gt;Longitude:&lt;/b&gt; '+str(lon)+' &lt;br&gt;&lt;/br&gt;&lt;b&gt;Date:&lt;/b&gt; '+str(dt1) +' &lt;b&gt;Time:&lt;/b&gt; '+str(dt2)+' &lt;b&gt;Degree:&lt;/b&gt; '+str(Yaw)+'&lt;/p&gt; &lt;table width=400 cellpadding=0 cellspacing=0"&gt;  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;img width=80%" src="'+str(kmlimagepath)+'"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div align="left"&gt;&lt;font color="green"&gt;&lt;b&gt;Created by GIS-HAII&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;</text><displayMode>default</displayMode></BalloonStyle></Style>'+'\n')
-                                    aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point></Placemark>'+'\n'
-                                    #point = kml.newpoint(name = filename , coords = [(y,x)])
-                                    #picpath = kml.addfile(fullpath)
-                                    #fn = 'files/'+ os.path.splitext(filename)[0] + '.jpg' #Note: will not work if .JPG is used, must be lower case.
-                                    #balstylestring = "<p><b>Latitude:</b> " + str(lat)+" "+ "<b>Longitude:</b> " + str(lon) +"<br></br><b>Date:</b> " + dt1+" "+ "<b>Time:</b> " + dt2 +"</p> <table width="+"400"+" cellpadding="+"0"+" cellspacing="+"0"+'"'+">  <tbody><tr><td><img width="+"80%"+'"'+" src=" + fn + "></td></tr></tbody></table><div align='left'><font color='green'><b>Created by GIS-HAII</b></font></div>"
-                                    #point.style.balloonstyle.text = balstylestring
+                        try:
+                            if 'GPSInfo' in a:
+                                if a is not None and a['GPSInfo'] !={}:
+                                    #gps direction
+                                    direction = get_gps_direction(a['GPSInfo'])
+                                    #try getting drone direction if no gps direction
+                                    if direction is None:
+                                        direction = get_drone_exif(fullpath)
+                                    if direction is None:
+                                        arrow_style = ''
+                                    else:
+                                        arrow_style = '<IconStyle><Icon><href>http://www.ecoris.co.jp/images/contents_img/arrow.png</href></Icon><heading>' + str(
+                                            direction) + '</heading></IconStyle>'
 
 
+                                    lat = [float(x)/float(y) for x, y in a['GPSInfo'][2]]
+                                    latref = a['GPSInfo'][1]
+                                    lon = [float(x)/float(y) for x, y in a['GPSInfo'][4]]
+                                    lonref = a['GPSInfo'][3]
 
-                                    
-                                    #write csv process
-                                    new_file.write(filename+","+str(lat)+","+str(lon)+","+str(Yaw)+"\n")
-                                    
-                                    shp_id=shp_id+1
+                                    lat = lat[0] + lat[1]/60 + lat[2]/3600
+                                    lon = lon[0] + lon[1]/60 + lon[2]/3600
+
+                                    if latref == 'S':
+                                        lat = -lat
+                                    if lonref == 'W':
+                                        lon = -lon
+                                    datetime = a['DateTime']
+                                    dt1,dt2=datetime.split()
+                                    if dt1 is None:
+                                        dt1='Unknow'
+                                    if dt2 is None:
+                                        dt2='Unknow'
+
+                                    if lat:
+                                        x, y = lat, lon
+
+                                        the_kml.write('<Style id="stylesel_'+str(shp_id)+'">' + arrow_style + '<BalloonStyle><text>&lt;p&gt;&lt;b&gt;Latitude:&lt;/b&gt; '+str(lat)+' &lt;b&gt;Longitude:&lt;/b&gt; '+str(lon)+' &lt;br&gt;&lt;/br&gt;&lt;b&gt;Date:&lt;/b&gt; '+str(dt1) +' &lt;b&gt;Time:&lt;/b&gt; '+str(dt2)+' &lt;b&gt;direction:&lt;/b&gt; '+str(direction)+'&lt;/p&gt; &lt;table width=400 cellpadding=0 cellspacing=0"&gt;  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;img width=80%" src="'+str(kmlimagepath)+'"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div align="left"&gt;&lt;font color="green"&gt;&lt;b&gt;Created by GIS-HAII&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;</text><displayMode>default</displayMode></BalloonStyle></Style>'+'\n')
+                                        aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><TimeStamp><when>'+str(datetime)+'</when></TimeStamp><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point>'
+                                        if direction is not None:
+                                            aaa = aaa+'<ExtendedData><SchemaData schemaUrl="#GPSHeadingId"><SimpleData name="Heading">'+str(direction)+'</SimpleData></SchemaData></ExtendedData>'
+                                        aaa=aaa+'</Placemark>'+'\n'
+                                        #point = kml.newpoint(name = filename , coords = [(y,x)])
+                                        #picpath = kml.addfile(fullpath)
+                                        #fn = 'files/'+ os.path.splitext(filename)[0] + '.jpg' #Note: will not work if .JPG is used, must be lower case.
+                                        #balstylestring = "<p><b>Latitude:</b> " + str(lat)+" "+ "<b>Longitude:</b> " + str(lon) +"<br></br><b>Date:</b> " + dt1+" "+ "<b>Time:</b> " + dt2 +"</p> <table width="+"400"+" cellpadding="+"0"+" cellspacing="+"0"+'"'+">  <tbody><tr><td><img width="+"80%"+'"'+" src=" + fn + "></td></tr></tbody></table><div align='left'><font color='green'><b>Created by GIS-HAII</b></font></div>"
+                                        #point.style.balloonstyle.text = balstylestring
+
+
+
+
+                                        #write csv process
+                                        new_file.write(filename+","+str(lat)+","+str(lon)+","+str(direction)+"\n")
+
+                                        shp_id=shp_id+1
+                        except:
+                            self.log("skip:{}".format(filename))
             the_kml.write(aaa)
             #the_kml.write('<ScreenOverlay>	<name>logo</name><Icon>	<href>http://www.haii.or.th/haii.png</href></Icon><overlayXY x="1" y="1" xunits="fraction" yunits="fraction"/>	<screenXY x="180" y="150" xunits="pixels" yunits="pixels"/><rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/><size x="170" y="124" xunits="pixels" yunits="pixels"/>	</ScreenOverlay>')
             the_kml.write('</Document></kml>')
@@ -260,3 +279,5 @@ class photo_to_kmz:
         else:
             self.dlg.accept()
         
+    def log(self,msg):
+        QgsMessageLog.logMessage(msg, 'MyPlugin',QgsMessageLog.INFO)
