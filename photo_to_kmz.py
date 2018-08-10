@@ -211,6 +211,8 @@ class photo_to_kmz:
                                     dt1,dt2=datetime.split()
                                     if dt1 is None:
                                         dt1='Unknow'
+                                    else:
+                                        dt1=dt1.replace(":","-")
                                     if dt2 is None:
                                         dt2='Unknow'
 
@@ -218,7 +220,7 @@ class photo_to_kmz:
                                         x, y = lat, lon
 
                                         the_kml.write('<Style id="stylesel_'+str(shp_id)+'">' + arrow_style + '<BalloonStyle><text>&lt;p&gt;&lt;b&gt;Latitude:&lt;/b&gt; '+str(lat)+' &lt;b&gt;Longitude:&lt;/b&gt; '+str(lon)+' &lt;br&gt;&lt;/br&gt;&lt;b&gt;Date:&lt;/b&gt; '+str(dt1) +' &lt;b&gt;Time:&lt;/b&gt; '+str(dt2)+' &lt;b&gt;direction:&lt;/b&gt; '+str(direction)+'&lt;/p&gt; &lt;table width=400 cellpadding=0 cellspacing=0"&gt;  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;img width=80%" src="'+str(kmlimagepath)+'"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div align="left"&gt;&lt;font color="green"&gt;&lt;b&gt;Created by GIS-HAII&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;</text><displayMode>default</displayMode></BalloonStyle></Style>'+'\n')
-                                        aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><TimeStamp><when>'+str(datetime)+'</when></TimeStamp><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point>'
+                                        aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><TimeStamp><when>'+str(dt1)+'T'+str(dt2)+'\+09'+'</when></TimeStamp><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point>'
                                         if direction is not None:
                                             aaa = aaa+'<ExtendedData><SchemaData schemaUrl="#GPSHeadingId"><SimpleData name="Heading">'+str(direction)+'</SimpleData></SchemaData></ExtendedData>'
                                         aaa=aaa+'</Placemark>'+'\n'
