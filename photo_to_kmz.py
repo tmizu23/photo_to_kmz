@@ -52,18 +52,18 @@ def get_gps_direction(data):
 
 def get_drone_exif(fn):
     try:
-	    img = Image.open(fn)
-	    txt = ""
-	    Yaw = None
-	    for segment, content in img.applist:
-	        marker, body = content.split('\x00', 1)
-	        if segment == 'APP1' and marker == 'http://ns.adobe.com/xap/1.0/':
-	           txt = body
-	    xmp_start = txt.find('drone-dji:FlightYawDegree=')
-	    xmp_end = txt.find('drone-dji:FlightPitchDegree')
-	    if xmp_start != xmp_end:
-	        Yaw = float(txt[xmp_start+27:xmp_end-5])
-	    return Yaw
+        img = Image.open(fn)
+        txt = ""
+        Yaw = None
+        for segment, content in img.applist:
+            marker, body = content.split('\x00', 1)
+            if segment == 'APP1' and marker == 'http://ns.adobe.com/xap/1.0/':
+                txt = body
+        xmp_start = txt.find('drone-dji:FlightYawDegree=')
+        xmp_end = txt.find('drone-dji:FlightPitchDegree')
+        if xmp_start != xmp_end:
+            Yaw = float(txt[xmp_start+27:xmp_end-5])
+        return Yaw
     except IOError:
         return None
 
@@ -142,7 +142,8 @@ class photo_to_kmz:
         #QMessageBox.information(self.iface.mainWindow(),"Info",str(self.dlg.textPath.toPlainText()))
         #QMessageBox.information(self.iface.mainWindow(),"Info",str(self.dlg.textEdit.toPlainText()))
 
-        
+        kml_output = self.dlg.checkBox.isChecked()
+
         path=self.dlg.textPath.toPlainText().encode('iso-8859-11')
         OutputFile=self.dlg.textPath.toPlainText().encode('iso-8859-11')+'/'+self.dlg.textEdit.toPlainText().encode('iso-8859-11')+'.kmz'
         
@@ -177,8 +178,10 @@ class photo_to_kmz:
                     ext = filename.lower().rsplit('.', 1)[-1]
                     if ext in extens:
                         fullpath = os.path.join(dirpath, filename)
-                        kmlimagepath = os.path.join(dirpath.replace(path,"."),filename.lower()).replace("\\","/")
-                        #QgsMessageLog.logMessage('My message', kmlimagepath)
+                        if kml_output:
+                            kmlimagepath = os.path.join(dirpath.replace(path,"."),filename.lower()).replace("\\","/")
+                        else:
+                            kmlimagepath = "files/" + filename.lower()
                         a=get_exif(fullpath)
                         try:
                             if 'GPSInfo' in a:
@@ -220,7 +223,7 @@ class photo_to_kmz:
                                         x, y = lat, lon
 
                                         the_kml.write('<Style id="stylesel_'+str(shp_id)+'">' + arrow_style + '<BalloonStyle><text>&lt;p&gt;&lt;b&gt;Latitude:&lt;/b&gt; '+str(lat)+' &lt;b&gt;Longitude:&lt;/b&gt; '+str(lon)+' &lt;br&gt;&lt;/br&gt;&lt;b&gt;Date:&lt;/b&gt; '+str(dt1) +' &lt;b&gt;Time:&lt;/b&gt; '+str(dt2)+' &lt;b&gt;direction:&lt;/b&gt; '+str(direction)+'&lt;/p&gt; &lt;table width=400 cellpadding=0 cellspacing=0"&gt;  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;img width=80%" src="'+str(kmlimagepath)+'"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div align="left"&gt;&lt;font color="green"&gt;&lt;b&gt;Created by GIS-HAII&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;</text><displayMode>default</displayMode></BalloonStyle></Style>'+'\n')
-                                        aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><TimeStamp><when>'+str(dt1)+'T'+str(dt2)+'\+09'+'</when></TimeStamp><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point>'
+                                        aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><TimeStamp><when>'+str(dt1)+'T'+str(dt2)+'+09'+'</when></TimeStamp><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point>'
                                         if direction is not None:
                                             aaa = aaa+'<ExtendedData><SchemaData schemaUrl="#GPSHeadingId"><SimpleData name="Heading">'+str(direction)+'</SimpleData></SchemaData></ExtendedData>'
                                         aaa=aaa+'</Placemark>'+'\n'
@@ -250,15 +253,17 @@ class photo_to_kmz:
 
             #if not os.path.exists(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz'):
                 #os.makedirs(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz')
-            #copy prepare kmz
-            #shutil.copytree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11')), str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz/files')
-            #shutil.copy(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")
 
-            #create zip
-            #shutil.make_archive(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11')), "zip", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/')
-            #os.rename(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.zip',str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.kmz')
-            #shutil.rmtree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz') 
-            #os.remove(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")            
+            if not kml_output:
+                #copy prepare kmz
+                shutil.copytree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11')), str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz/files')
+                shutil.copy(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")
+
+                #create zip
+                shutil.make_archive(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11')), "zip", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/')
+                os.rename(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.zip',str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.kmz')
+                shutil.rmtree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz')
+                os.remove(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")
             QMessageBox.information( self.iface.mainWindow(),"Info", "Total export "+str(shp_id)+ " Points" +' || ' +"output folder: "+str(self.dlg.textPath.toPlainText().encode('iso-8859-11')) )
             #if shp_id > 0 :
             #    os.startfile(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kmz")               
