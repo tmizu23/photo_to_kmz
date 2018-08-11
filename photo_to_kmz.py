@@ -143,6 +143,7 @@ class photo_to_kmz:
         aaa=''
         if result == 1:
             new_file = open(path+'/'+name+".csv","w")
+            skip_file = open(path + '/' + name + "_skipped.csv", "w")
             new_file.write("name"+","+"lat"+","+"lng"+","+"direction"+"\n")
 
             
@@ -216,13 +217,16 @@ class photo_to_kmz:
                                         shp_id=shp_id+1
                             else:
                                 self.log("skip:{}".format(filename))
+                                skip_file.write(filename  + "\n")
                         except:
                             self.log("skip:{}".format(filename))
+                            skip_file.write(filename + "\n")
             the_kml.write(aaa)
             the_kml.write('</Document></kml>')
             the_kml.close()
 
             new_file.close()
+            skip_file.close()
 
             if not kml_output:
                 #copy prepare kmz
@@ -242,8 +246,7 @@ class photo_to_kmz:
         msg = ''
         ui = self.dlg
         
-        if ui.textEdit.toPlainText().encode('cp932') == '' or \
-            ui.textPath.toPlainText().encode('cp932') == '' :
+        if ui.textEdit.toPlainText() == '' or ui.textPath.toPlainText() == '' :
                 msg = 'Some required fields are missing. Please complete the form.\n'
            
         if msg != '':
