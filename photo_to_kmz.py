@@ -111,8 +111,6 @@ class photo_to_kmz:
         # connect the action to the run method
         self.action.triggered.connect(self.run)
 
-        
-        
 
         # Add toolbar button and menu item
         self.iface.addToolBarIcon(self.action)
@@ -123,12 +121,6 @@ class photo_to_kmz:
         self.iface.removePluginMenu(u"&photo2kmz", self.action)
         self.iface.removeToolBarIcon(self.action)
 
-
-
-
-
-
-    
     # run method that performs all the real work
     def run(self):
         self.dlg = photo_to_kmzDialog()
@@ -144,34 +136,24 @@ class photo_to_kmz:
 
         kml_output = self.dlg.checkBox.isChecked()
 
-        path=self.dlg.textPath.toPlainText().encode('iso-8859-11')
-        OutputFile=self.dlg.textPath.toPlainText().encode('iso-8859-11')+'/'+self.dlg.textEdit.toPlainText().encode('iso-8859-11')+'.kmz'
-        
-        '''
-        if str(self.dlg.textEdit.toPlainText()) == '' :
-            QMessageBox.information(self.iface.mainWindow(),"Info",'please fill output name')
+        path = self.dlg.textPath.toPlainText()#.encode('cp932')
+        name = self.dlg.textEdit.toPlainText()#.encode('cp932')
 
-        
-        if str(self.dlg.label_2.text()) == '':
-            QMessageBox.information(self.iface.mainWindow(),"Info",'please chooose images folder')
-        '''
         shp_id=0
         aaa=''
         if result == 1:
-            new_file = open(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".csv","w")
+            new_file = open(path+'/'+name+".csv","w")
             new_file.write("name"+","+"lat"+","+"lng"+","+"direction"+"\n")
 
             
             #write the_kml
-            the_kml=open(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml","w")
+            the_kml=open(path+'/'+name+".kml","w")
             the_kml.write(head_kmz+'\n')
             
             
             #process filter
             extens = ['jpg', 'jpeg','JPG','JPEG']
-            found = {x: [] for x in extens}
-            
-            #kml = simplekml.Kml()
+
             for (dirpath, dirnames, filenames) in os.walk(path):
                 for filename in filenames:
                     
@@ -227,55 +209,41 @@ class photo_to_kmz:
                                         if direction is not None:
                                             aaa = aaa+'<ExtendedData><SchemaData schemaUrl="#GPSHeadingId"><SimpleData name="Heading">'+str(direction)+'</SimpleData></SchemaData></ExtendedData>'
                                         aaa=aaa+'</Placemark>'+'\n'
-                                        #point = kml.newpoint(name = filename , coords = [(y,x)])
-                                        #picpath = kml.addfile(fullpath)
-                                        #fn = 'files/'+ os.path.splitext(filename)[0] + '.jpg' #Note: will not work if .JPG is used, must be lower case.
-                                        #balstylestring = "<p><b>Latitude:</b> " + str(lat)+" "+ "<b>Longitude:</b> " + str(lon) +"<br></br><b>Date:</b> " + dt1+" "+ "<b>Time:</b> " + dt2 +"</p> <table width="+"400"+" cellpadding="+"0"+" cellspacing="+"0"+'"'+">  <tbody><tr><td><img width="+"80%"+'"'+" src=" + fn + "></td></tr></tbody></table><div align='left'><font color='green'><b>Created by GIS-HAII</b></font></div>"
-                                        #point.style.balloonstyle.text = balstylestring
-
-
-
 
                                         #write csv process
                                         new_file.write(filename+","+str(lat)+","+str(lon)+","+str(direction)+"\n")
 
                                         shp_id=shp_id+1
+                            else:
+                                self.log("skip:{}".format(filename))
                         except:
                             self.log("skip:{}".format(filename))
             the_kml.write(aaa)
-            #the_kml.write('<ScreenOverlay>	<name>logo</name><Icon>	<href>http://www.haii.or.th/haii.png</href></Icon><overlayXY x="1" y="1" xunits="fraction" yunits="fraction"/>	<screenXY x="180" y="150" xunits="pixels" yunits="pixels"/><rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/><size x="170" y="124" xunits="pixels" yunits="pixels"/>	</ScreenOverlay>')
             the_kml.write('</Document></kml>')
             the_kml.close()
-            
-            #kml.savekmz(OutputFile, format = False)
 
             new_file.close()
 
-            #if not os.path.exists(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz'):
-                #os.makedirs(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz')
-
             if not kml_output:
                 #copy prepare kmz
-                shutil.copytree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11')), str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+'gis_kmz/files')
-                shutil.copy(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")
+                shutil.copytree(path, path+'/'+'gis_kmz/files')
+                shutil.copy(path+'/'+name+".kml", path+'/gis_kmz/'+name+".kml")
 
                 #create zip
-                shutil.make_archive(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11')), "zip", str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz/')
-                os.rename(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.zip',str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+'.kmz')
-                shutil.rmtree(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/gis_kmz')
-                os.remove(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kml")
-            QMessageBox.information( self.iface.mainWindow(),"Info", "Total export "+str(shp_id)+ " Points" +' || ' +"output folder: "+str(self.dlg.textPath.toPlainText().encode('iso-8859-11')) )
-            #if shp_id > 0 :
-            #    os.startfile(str(self.dlg.textPath.toPlainText().encode('iso-8859-11'))+'/'+str(self.dlg.textEdit.toPlainText().encode('iso-8859-11'))+".kmz")               
-            #pass
+                shutil.make_archive(path+'/'+name, "zip", path+'/gis_kmz/')
+                os.rename(path+'/'+name+'.zip',path+'/'+name+'.kmz')
+                shutil.rmtree(path+'/gis_kmz')
+                os.remove(path+'/'+name+".kml")
+            QMessageBox.information( self.iface.mainWindow(),"Info", "Total export "+str(shp_id)+ " Points"+' || ' +"output folder: "+path )
+
 
     def validate_entries(self):
         # check to see that all fields have been entered
         msg = ''
         ui = self.dlg
         
-        if ui.textEdit.toPlainText().encode('iso-8859-11') == '' or \
-            ui.textPath.toPlainText().encode('iso-8859-11') == '' :
+        if ui.textEdit.toPlainText().encode('cp932') == '' or \
+            ui.textPath.toPlainText().encode('cp932') == '' :
                 msg = 'Some required fields are missing. Please complete the form.\n'
            
         if msg != '':
