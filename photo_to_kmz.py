@@ -151,7 +151,10 @@ class photo_to_kmz:
             f = open(basepath+"/qlrtmp.qlr", "r")
             qlrtmp = f.read().decode('utf8')
             f.close()
+
             qlrtmp = qlrtmp.replace("filename",name)
+            if not kml_output:
+                qlrtmp = qlrtmp.replace(name+".kml", name+".kmz")
             qlrtmp = qlrtmp.replace("picfolder", os.path.basename(path))
             qlr_file.write(qlrtmp.encode('utf8'))
             new_file.write("name"+","+"lat"+","+"lng"+","+"direction"+"\n")
