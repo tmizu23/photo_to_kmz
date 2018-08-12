@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui_photo_to_kmz.ui'
 #
-# Created: Sat Aug 11 16:33:43 2018
+# Created: Sun Aug 12 16:41:44 2018
 #      by: PyQt4 UI code generator 4.10.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,18 +26,20 @@ except AttributeError:
 class Ui_photo_to_kmz(object):
     def setupUi(self, photo_to_kmz):
         photo_to_kmz.setObjectName(_fromUtf8("photo_to_kmz"))
-        photo_to_kmz.resize(538, 157)
-        photo_to_kmz.setFixedSize(538, 157)
+        photo_to_kmz.setEnabled(True)
+        photo_to_kmz.resize(534, 170)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(photo_to_kmz.sizePolicy().hasHeightForWidth())
+        photo_to_kmz.setSizePolicy(sizePolicy)
         self.buttonBox = QtGui.QDialogButtonBox(photo_to_kmz)
         self.buttonBox.setGeometry(QtCore.QRect(80, 120, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
-        self.textEdit = QtGui.QTextEdit(photo_to_kmz)
-        self.textEdit.setGeometry(QtCore.QRect(150, 70, 271, 31))
-        self.textEdit.setObjectName(_fromUtf8("textEdit"))
         self.label = QtGui.QLabel(photo_to_kmz)
-        self.label.setGeometry(QtCore.QRect(20, 70, 121, 31))
+        self.label.setGeometry(QtCore.QRect(40, 70, 201, 41))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label.setFont(font)
@@ -46,23 +48,24 @@ class Ui_photo_to_kmz(object):
         self.textPath.setGeometry(QtCore.QRect(40, 20, 381, 31))
         self.textPath.setObjectName(_fromUtf8("textPath"))
         self.browseButton = QtGui.QPushButton(photo_to_kmz)
-        self.browseButton.setGeometry(QtCore.QRect(440, 20, 75, 31))
+        self.browseButton.setGeometry(QtCore.QRect(434, 20, 81, 31))
         self.browseButton.setObjectName(_fromUtf8("browseButton"))
         self.checkBox = QtGui.QCheckBox(photo_to_kmz)
         self.checkBox.setGeometry(QtCore.QRect(440, 80, 75, 16))
         self.checkBox.setChecked(True)
         self.checkBox.setObjectName(_fromUtf8("checkBox"))
+        self.textEdit = QtGui.QLineEdit(photo_to_kmz)
+        self.textEdit.setGeometry(QtCore.QRect(260, 70, 161, 31))
+        self.textEdit.setObjectName(_fromUtf8("textEdit"))
 
         self.retranslateUi(photo_to_kmz)
-        QtCore.QObject.connect(self.browseButton, QtCore.SIGNAL("clicked()"), self.OpenBrowse)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), photo_to_kmz.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), photo_to_kmz.reject)
-        QtCore.QMetaObject.connectSlotsByName(photo_to_kmz)
+        QtCore.QObject.connect(self.browseButton, QtCore.SIGNAL("clicked()"), self.OpenBrowse)
 
     def retranslateUi(self, photo_to_kmz):
         photo_to_kmz.setWindowTitle(_translate("photo_to_kmz", "photo_to_kmz", None))
-        self.label.setText(_translate("photo_to_kmz", "Save as File Name \n"
-" not include .kmz", None))
+        self.label.setText(_translate("photo_to_kmz", "<html><head/><body><p>Save as File Name (only alpabetic)</p><p>not include .kml or .kmz</p></body></html>", None))
         self.textPath.setHtml(_translate("photo_to_kmz", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

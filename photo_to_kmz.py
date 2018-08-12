@@ -38,7 +38,12 @@ from PIL.ExifTags import GPSTAGS
 import os,sys,zipfile
 
 
-head_kmz='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2"><Document id="feat_1"><Schema name="GPSHeading" id="GPSHeadingId"><SimpleField type="double" name="Heading"><displayName><![CDATA[heading]]></displayName></SimpleField></Schema>'
+head_kmz='<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2"><Document id="feat_1">'
+head_kmz=head_kmz + '<Schema name="GPSHeading" id="GPSHeadingId">'
+head_kmz=head_kmz + '<SimpleField type="double" name="Heading"><displayName><![CDATA[heading]]></displayName></SimpleField>'
+head_kmz=head_kmz + '<SimpleField type="double" name="Lon"><displayName><![CDATA[lon]]></displayName></SimpleField>'
+head_kmz=head_kmz + '<SimpleField type="double" name="Lat"><displayName><![CDATA[lat]]></displayName></SimpleField>'
+head_kmz=head_kmz + '</Schema>'
 
 
 
@@ -129,21 +134,26 @@ class photo_to_kmz:
         self.dlg.show()
         # Run the dialog event loop
         result = self.dlg.exec_()
-        # See if OK was pressed
-
-        #QMessageBox.information(self.iface.mainWindow(),"Info",str(self.dlg.textPath.toPlainText()))
-        #QMessageBox.information(self.iface.mainWindow(),"Info",str(self.dlg.textEdit.toPlainText()))
 
         kml_output = self.dlg.checkBox.isChecked()
 
-        path = self.dlg.textPath.toPlainText()#.encode('cp932')
-        name = self.dlg.textEdit.toPlainText()#.encode('cp932')
+        path = self.dlg.textPath.toPlainText()
+        name = self.dlg.textEdit.text()
 
         shp_id=0
         aaa=''
         if result == 1:
             new_file = open(path+'/'+name+".csv","w")
             skip_file = open(path + '/' + name + "_skipped.csv", "w")
+            qlr_file = open(path + '/' + name + ".qlr", "w")
+            basepath = os.path.dirname(os.path.realpath(__file__))
+            self.log("{}".format(basepath))
+            f = open(basepath+"/qlrtmp.qlr", "r")
+            qlrtmp = f.read().decode('utf8')
+            f.close()
+            qlrtmp = qlrtmp.replace("filename",name)
+            qlrtmp = qlrtmp.replace("picfolder", os.path.basename(path))
+            qlr_file.write(qlrtmp.encode('utf8'))
             new_file.write("name"+","+"lat"+","+"lng"+","+"direction"+"\n")
 
             
@@ -208,7 +218,7 @@ class photo_to_kmz:
                                         the_kml.write('<Style id="stylesel_'+str(shp_id)+'">' + arrow_style + '<BalloonStyle><text>&lt;p&gt;&lt;b&gt;Latitude:&lt;/b&gt; '+str(lat)+' &lt;b&gt;Longitude:&lt;/b&gt; '+str(lon)+' &lt;br&gt;&lt;/br&gt;&lt;b&gt;Date:&lt;/b&gt; '+str(dt1) +' &lt;b&gt;Time:&lt;/b&gt; '+str(dt2)+' &lt;b&gt;direction:&lt;/b&gt; '+str(direction)+'&lt;/p&gt; &lt;table width=400 cellpadding=0 cellspacing=0"&gt;  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;&lt;img width=80%" src="'+str(kmlimagepath)+'"&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;div align="left"&gt;&lt;font color="green"&gt;&lt;b&gt;Created by GIS-HAII&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;</text><displayMode>default</displayMode></BalloonStyle></Style>'+'\n')
                                         aaa=aaa+'<Placemark id="feat_'+str(shp_id)+'"><name>'+str(filename.lower())+'</name><TimeStamp><when>'+str(dt1)+'T'+str(dt2)+'+09'+'</when></TimeStamp><styleUrl>#stylesel_'+str(shp_id)+'</styleUrl><Point id="geom_'+str(shp_id)+'"><coordinates>'+str(lon)+','+str(lat)+',0.0</coordinates></Point>'
                                         if direction is not None:
-                                            aaa = aaa+'<ExtendedData><SchemaData schemaUrl="#GPSHeadingId"><SimpleData name="Heading">'+str(direction)+'</SimpleData></SchemaData></ExtendedData>'
+                                            aaa = aaa+'<ExtendedData><SchemaData schemaUrl="#GPSHeadingId"><SimpleData name="Heading">'+str(direction)+'</SimpleData><SimpleData name="Lon">'+str(lon)+'</SimpleData><SimpleData name="Lat">'+str(lat)+'</SimpleData></SchemaData></ExtendedData>'
                                         aaa=aaa+'</Placemark>'+'\n'
 
                                         #write csv process
@@ -227,6 +237,7 @@ class photo_to_kmz:
 
             new_file.close()
             skip_file.close()
+            qlr_file.close()
 
             if not kml_output:
                 #copy prepare kmz
@@ -246,7 +257,7 @@ class photo_to_kmz:
         msg = ''
         ui = self.dlg
         
-        if ui.textEdit.toPlainText() == '' or ui.textPath.toPlainText() == '' :
+        if ui.textEdit.text() == '' or ui.textPath.toPlainText() == '' :
                 msg = 'Some required fields are missing. Please complete the form.\n'
            
         if msg != '':
