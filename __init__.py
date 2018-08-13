@@ -27,16 +27,16 @@ def description():
 	return 'get lat lng from photo to kmz file.'
 
 def version():
-	return '2.0'
+	return '2.1'
 
 def icon():
 	return 'icon.png'
 
 def qgisMinimumVersion():
-	return '2.0'
+	return '2.18'
 
 def qgisMaximumVersion():
-	return '2.9'
+	return '2.99'
 
 def author():
 	return 'Surachai Chantee'
