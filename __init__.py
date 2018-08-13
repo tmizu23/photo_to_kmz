@@ -21,13 +21,13 @@
  This script initializes the plugin, making it known to QGIS.
 """
 def name():
-	return 'Photo2Kmz'
+	return 'CustomedPhoto2kmz'
 
 def description():
 	return 'get lat lng from photo to kmz file.'
 
 def version():
-	return '2.1'
+	return '0.1.0'
 
 def icon():
 	return 'icon.png'
@@ -39,13 +39,13 @@ def qgisMaximumVersion():
 	return '2.99'
 
 def author():
-	return 'Surachai Chantee'
+	return 'Takayuki Mizutani'
 
 def email():
-	return 'surachai@haii.or.th'
+	return 'mizutani@ecoris.co.jp'
 
 def category():
-  return 'Vector'
+  return ''
 
 def classFactory(iface):
     # load photo_to_kmz class from file photo_to_kmz

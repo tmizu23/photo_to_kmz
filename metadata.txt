@@ -1,39 +1,15 @@
-# This file contains metadata for your plugin. Beginning
-# with version 1.8 this is the preferred way to supply information about a
-# plugin. The current method of embedding metadata in __init__.py will
-# be supported until version 2.0
-
-# This file should be included when you package your plugin.
-
-# Mandatory items:
-
-
 [general]
-name=photo2kmz
+name=CustomedPhoto2kmz
 qgisMinimumVersion=2.18
-description=get lat lng from photo to kmz file
-about=for namtamon project
-version=2.1
-author=surachai chantee GIS_HAII
-email=surchai@haii.or.th
-
-# end of mandatory metadata
-
-# Optional items:
-
-# Uncomment the following line and add your changelog entries:
-# changelog=
-
-# tags are comma separated with spaces allowed
+description=get lat lng from photo to kmz or kml file. this plugin is customed from photo2kmz plugin
+about=
+version=0.1.0
+author=Takayuki Mizutani
+email=mizutani@ecoris.co.jp
 tags=
-
-homepage=https://www.facebook.com/namtambon
-tracker=https://www.facebook.com/namtambon
-repository=https://www.facebook.com/namtambon
+homepage=
+tracker=
+repository=
 icon=icon.png
-# experimental flag
-experimental=True
-
-# deprecated flag (applies to the whole plugin, not just a single version
+experimental=False
 deprecated=False
-
